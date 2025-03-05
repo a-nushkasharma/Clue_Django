@@ -1,0 +1,145 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Profile</title>
+<style>
+  /* General styles */
+  body {
+    background: linear-gradient(135deg,rgb(6, 31, 57),rgb(14, 9, 97));
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  /* Profile container */
+  .profile-container {
+      background-color: #ffffff;
+      width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      padding: 20px;
+      position: relative;
+  }
+
+  /* Profile image */
+  .imgcontainer {
+      margin: 20px 0;
+      position: relative;
+  }
+
+  img.avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 2px solid #007BFF;
+      object-fit: cover;
+  }
+
+  /* Close button */
+  .close {
+      position: absolute;
+      right: 15px;
+      top: 10px;
+      color: #000;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+  }
+
+  .close:hover,
+  .close:focus {
+      color: red;
+  }
+
+  /* Profile details */
+  .profile-details h3 {
+      font-size: 24px;
+      color: #333;
+      margin: 10px 0;
+  }
+
+  .profile-details p {
+      font-size: 16px;
+      color: #666;
+  }
+
+  /* Button container */
+  .button-container {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+  }
+
+  button, .logout-link {
+      background-color: #007BFF;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 80%;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+  }
+
+  button:hover, .logout-link:hover {
+      opacity: 0.9;
+  }
+
+  .update-btn {
+      background-color: #007BFF;
+  }
+
+  .delete-btn {
+      background-color: #f44336;
+  }
+
+  .logout-link {
+      background-color:rgb(80, 83, 228);
+  }
+</style>
+</head>
+<body>
+
+<div id="profileModal" class="profile-container">
+  {% if user.is_authenticated %}
+  <div class="imgcontainer">
+    <span onclick="closeModal()" class="close" title="Close">&times;</span>
+    <img src="{% static 'img/profilephoto.jpg' %}" alt="Default Avatar" class="avatar">
+  </div>
+
+  <div class="profile-details">
+    <div><b>Username:</b> <span>{{ user.username }}</span></div>
+    <div><b>Email:</b> <span>{{ user.email }}</span></div>
+</div>
+
+
+  <div class="button-container">
+    <a href="{% url 'logout' %}" class="logout-link">Log Out</a>
+  </div>
+  {% else %}
+  <h3>You are not logged in</h3>
+  <a href="{% url 'login' %}" class="logout-link">Login Here</a>
+  {% endif %}
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      document.querySelector(".close").addEventListener("click", function () {
+          window.location.href = "{% url 'home' %}"; // Replace 'home' with your actual URL name
+      });
+  });
+</script>
+
+</body>
+</html>

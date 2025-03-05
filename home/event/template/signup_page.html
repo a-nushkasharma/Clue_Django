@@ -1,0 +1,260 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    /* General styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #007BFF, #6C63FF);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #0f0e0e;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      color: #fff;
+      animation: fadeInDown 1s ease-in-out;
+    }
+
+    /* Modal container */
+    .modal {
+      display: block; /* Show by default */
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.6);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    /* Modal content */
+    .modal-content {
+      background-color: #fff;
+      margin: 5% auto;
+      border: none;
+      width: 90%;
+      max-width: 400px;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+      animation: slideIn 0.7s ease-in-out;
+    }
+
+    /* Avatar image */
+    .imgcontainer {
+      text-align: center;
+      margin: 24px 0 12px 0;
+    }
+
+    img.avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Close button */
+    .close {
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      color: #333;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #FF0000;
+    }
+
+    /* Input fields */
+    input[type=text], input[type=password], input[type=email] {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 10px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 16px;
+      background-color: #f9f9f9;
+      transition: all 0.3s ease;
+    }
+
+    input[type=text]:focus, input[type=password]:focus, input[type=email]:focus {
+      border-color: #007BFF;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      outline: none;
+    }
+
+    /* Buttons */
+    button {
+      background: linear-gradient(135deg, #007BFF, #6C63FF);
+      color: white;
+      padding: 12px 20px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Sign-in link */
+    .signin-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .signin-container a {
+      color: #007BFF;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    .signin-container a:hover {
+      color: #6C63FF;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Error message */
+    #error-message {
+      color: red;
+      font-size: 12px;
+      display: none;
+    }
+  </style>
+  <script>
+    function validateEmail() {
+      const emailInput = document.getElementById('email');
+      const emailValue = emailInput.value;
+      const domain = "@banasthali.in";
+
+      if (!emailValue.endsWith(domain)) {
+        alert("Email must be from the @banasthali.in domain.");
+        return false;
+      }
+      return true;
+    }
+
+    function validateForm() {
+      const password = document.getElementById('psw').value;
+      const confirmPassword = document.getElementById('psw-repeat').value;
+      const errorMessage = document.getElementById('error-message');
+
+      if (password !== confirmPassword) {
+        errorMessage.style.display = 'block';
+        document.getElementById('psw-repeat').focus();
+        return false;
+      }
+
+      errorMessage.style.display = 'none'; // Hide the message if passwords match
+      return true; // Allow form submission
+    }
+    window.onload = function () {
+        document.getElementById('signForm').reset();
+    };
+  </script>
+</head>
+<body>
+
+  <h2>Sign Up Page</h2>
+
+  <div id="signModal" class="modal">
+    <form class="modal-content animate" id="signForm" action="/signup/" method="post" onsubmit="return validateForm()">
+      {% csrf_token %}
+      <div class="imgcontainer">
+        <span onclick="document.getElementById('signModal').style.display='none'" class="close" title="Close Modal">&times;</span>
+        <img src="{% static 'img/Banasthali_Vidyapeeth_Logo.png' %}" alt="Avatar" class="avatar">
+      </div>
+
+      <div class="container">
+        {% if messages %}
+        <ul>
+          {% for message in messages %}
+          <li style="color: red;">{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+        <label for="email"><b>Email</b></label>
+        <input type="email" placeholder="Enter Email" id="email" name="email" value="{{ email|default:'' }}" required>
+
+        <label for="fname"><b>Name</b></label>
+        <input type="text" placeholder="Enter First Name" name="fname" value="{{ fname|default:'' }}" required>
+
+        <label for="sid"><b>Student Id</b></label>
+        <input type="text" placeholder="Enter Student ID" name="sid" value="{{ sid|default:'' }}" required>
+
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" id="psw" value="{{ psw|default:'' }}" required>
+
+        <label for="psw-repeat"><b>Confirm Password</b></label>
+        <input type="password" placeholder="Confirm Password" name="psw-repeat" id="psw-repeat" value="{{ psw_repeat|default:'' }}" required>
+        <span id="error-message">Passwords do not match!</span>
+
+        <button type="submit">Sign Up</button>
+        <div class="signin-container">
+          <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</body>
+</html>

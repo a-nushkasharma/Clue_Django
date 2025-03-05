@@ -1,0 +1,50 @@
+{% extends "nav.html" %}
+{% load static %}
+
+{% block title %}Coordinator Dashboard{% endblock %}
+
+{% block content %}
+<!-- Main Layout -->
+<div class="flex h-screen mt-16">
+  <!-- Sidebar -->
+  <aside class="w-1/4 bg-white h-full p-6 shadow-lg hidden sm:block">
+    <nav class="space-y-4 mt-8">
+      <a href="#" class="block text-gray-800 font-medium hover:text-blue-600 transition">Dashboard</a>
+      <a href="/template/coordinator_eventListing.html" class="block text-gray-800 font-medium hover:text-blue-600 transition">Events</a>
+      <a href="#" class="block text-gray-800 font-medium hover:text-blue-600 transition">Notifications</a>
+      <a href="#" class="block text-gray-800 font-medium hover:text-blue-600 transition">Settings</a>
+      <a href="#" class="block text-gray-800 font-medium hover:text-blue-600 transition">Logout</a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-10">
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow p-6 flex items-center justify-between mb-8">
+      <!-- Profile Section -->
+      <div class="flex items-center">
+        <div class="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 shadow-md">
+          <!-- Placeholder for Profile Picture -->
+          <div class="w-30 h-24 rounded-full overflow-hidden shadow-md">
+            <img src="{% static 'img/Banasthali_Vidyapeeth_Logo.png' %}" alt="Profile Photo" class="w-full h-full object-cover">
+          </div>
+        </div>
+        <div class="ml-6">
+          <h2 class="text-xl font-semibold text-gray-800">Coordinator Name</h2>
+          <p class="text-sm text-gray-600">coordinator@example.com</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="grid grid-cols-2 gap-6">
+      <button class="w-full py-4 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 transition" onclick="window.location.href='event_creation_form.html'">
+        Create Event
+      </button>
+      <button class="w-full py-4 bg-red-600 text-white font-medium rounded-lg shadow hover:bg-red-700 transition">
+        Logout
+      </button>
+    </div>
+  </main>
+</div>
+{% endblock %}

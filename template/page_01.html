@@ -1,0 +1,99 @@
+{% extends 'nav.html' %} 
+{% load static %}
+{% load cache %}
+
+{% block content %}
+<main class="container mx-auto p-6 flex flex-col gap-6 mt-8 min-h-screen bg-white">
+    
+    {% comment %} <!-- Cache Slideshow Section -->
+
+    <section class="bg-white rounded-lg shadow-lg p-6 text-center">
+        <h2 class="text-2xl font-bold mb-4">Explore the Departments</h2>
+        <div class="w-full h-48 bg-gray-200 rounded-lg flex justify-between items-center overflow-hidden">
+            <!-- Image 1 -->
+            <div class="w-1/3 h-full flex-shrink-0">
+                <img src="{% static 'img/2no.jpg' %}" class="w-full h-full object-cover" alt="Event 1">
+            </div>
+            <!-- Image 2 -->
+            <div class="w-1/3 h-full flex-shrink-0">
+                <img src="{% static 'img/event_image7.jpg' %}" class="w-full h-full object-cover" alt="Event 3">
+            </div>
+           
+            <!-- Image 3 -->
+            <div class="w-1/3 h-full flex-shrink-0">
+                <img src="{% static 'img/background.jpg' %}" class="w-full h-full object-cover" alt="Event 2">
+            </div>
+        </div>
+    </section>
+  {% endcomment %}
+
+  <!--- Cache -->
+{% cache 600 department_list %}
+<section>
+    
+    <!-- Include Particles.js -->
+<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+
+<!-- Departments Section with Outer Container -->
+<div class="relative w-full bg-gradient-to-r from-sky-100 to-sky-300 rounded-lg shadow-lg p-8 text-center text-gray-900 overflow-hidden">
+    <!-- Particle Background -->
+    <div id="particles-departments" class="absolute inset-0 w-full h-full"></div>
+
+    <h2 class="relative text-2xl font-bold mb-6 text-center">Departments</h2>
+
+
+    <div class="relative flex gap-4 overflow-x-auto transition-all duration-300 ease-in-out p-4"
+         id="departments-container">
+        {% for department in departments %}
+            <div class="flex-none w-60 h-48 bg-white rounded-lg shadow-md transform transition hover:scale-105 cursor-pointer">
+                <a href="{% url 'department_fests' department.department_name %}">
+                    <div class="w-60 h-48 flex flex-col items-center justify-center bg-gray-200 rounded-lg">
+                        {% if department.department_poster %}
+                            <img src="{{ department.department_poster.url }}" 
+                                alt="{{ department.department_name }} Poster"
+                                class="w-full h-36 object-cover rounded-t-lg">
+                        {% else %}
+                            <div class="w-full h-36 bg-gray-300 flex items-center justify-center rounded-t-lg">
+                                <span class="text-gray-500">No Poster</span>
+                            </div>
+                        {% endif %}
+                        <h1 class="text-center font-semibold py-2">{{ department.department_name }}</h1>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Initialize Particles.js -->
+<script>
+  particlesJS('particles-departments', {
+    particles: {
+      number: { value: 80 },
+      size: { value: 3 },
+      move: { speed: 1 }
+    }
+  });
+</script>
+
+<style>
+    #departments-container {
+        display: flex;
+        justify-content: center; /* Centered by default */
+        flex-wrap: nowrap;
+        transition: justify-content 0.5s ease-in-out;
+    }
+
+    /* When more than one department is present, shift them to the left */
+    #departments-container:has(div:nth-child(2)) {
+        justify-content: flex-start;
+    }
+</style>
+
+    <div class="text-center mt-4 text-blue-600 font-semibold cursor-pointer hover:text-blue-800">More...</div>
+</section>
+{% endcache %}
+
+
+</main>
+{% endblock %}

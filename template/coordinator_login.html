@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    {% load static %}
+    <meta charset="utf-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/signupStyle.css' %}">
+  </head>
+  <body>
+    <div class="center">
+
+      {% if messages %}
+          {% for message in messages %}
+              {% if message.tags == 'error' %}
+                  <center><h4 style="color: firebrick;">{{message}}</h4></center>
+              {% else %}
+                  <center><h4 style="color: dodgerblue;">{{message}}</h4></center>
+              {% endif %}
+          {% endfor %}
+      {% endif %}
+        
+      <form method="POST">      
+        
+        <div class="imgcontainer" style="position: relative;">
+            <img src="{% static 'img/Banasthali_Vidyapeeth_Logo.png' %}" alt="Avatar" class="avatar">
+            <span onclick="redirectToHome()" class="close" title="Close Modal">&times;</span>
+          </div>
+      
+        {% csrf_token %}
+
+        <div class="txt_field">
+          <input type="text" required name="username">
+          <span></span>
+          <label>Username</label>
+        </div>
+
+        <div class="txt_field">
+          <input type="password" required name="password">
+          <span></span>
+          <label>Password</label>
+        </div>
+
+        <input type="submit" value="Login">
+        <div class="signup_link">
+            Login as Student? <a href="{% url 'login' %}">Login</a>
+        </div>
+      </form>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelector(".close").addEventListener("click", function () {
+                window.location.href = "{% url 'home' %}"; // Replace 'home' with your actual URL name
+            });
+        });
+    </script>
+    
+
+  </body>
+</html>
+
+
+
