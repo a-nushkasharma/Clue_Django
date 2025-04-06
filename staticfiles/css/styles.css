@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base{
+    body{
+        @apply font-body;
+    }
+    body{
+        overflow-x:auto;
+    }
+    h1,h2,h3{
+        @apply font-display text-black font-medium
+    }
+    .container{
+        @apply  px-6 py-12 max-w-7xl mt-16 mx-auto lg:px-8 lg:mt-10;
+    }
+}

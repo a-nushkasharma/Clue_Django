@@ -3,6 +3,54 @@
 {% load cache %}
 
 {% block content %}
+<main >
+    
+  
+    <section>
+        <div id="club_header" class="w-full h-[80vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] bg-cover bg-center relative overflow-hidden mt-2 md:block hidden">
+                <div class="w-full h-full flex-shrink-0">
+                    <img src="{% static 'img/club_header.jpg' %}" class="w-full h-full object-cover" alt="Event 2">
+                </div>
+                <div class="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                    <h2 class="text-white text-4xl md:text-6xl font-bold">Explore Clubs</h2>
+                </div>
+       
+    </section>
+    
+
+    {% cache 600 clubs_list %}
+    <section class="relative w-full bg-gradient-to-r from-pink-100 to-blue-100 rounded-lg shadow-lg p-8 text-center text-gray-900">
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {% for club in clubs %}
+                <div class="bg-white rounded-lg shadow-md p-4 flex flex-col items-center">
+                    {% if club.club_poster %}
+                        <img src="{{ club.club_poster.url }}" class="w-40 h-40 object-cover rounded-lg" alt="{{ club.club_name }} Poster">
+                    {% else %}
+                        <div class="w-40 h-40 bg-gray-300 flex items-center justify-center rounded-lg">
+                            <span class="text-gray-500">No Poster</span>
+                        </div>
+                    {% endif %}
+                    <h3 class="mt-4 text-lg font-semibold">{{ club.club_name }}</h3>
+                    <a href="{% url 'club_detail' club.club_name %}" class="mt-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg">See more</a>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endcache %}
+    
+
+</main>
+{% endblock %}
+
+
+
+
+{% comment %} {% extends 'nav.html' %} 
+{% load static %}
+{% load cache %}
+
+{% block content %}
 <main class="container mx-auto p-6 flex flex-col gap-6 mt-8 min-h-screen bg-white">
     
   
@@ -91,4 +139,4 @@
     
 
 </main>
-{% endblock %}
+{% endblock %} {% endcomment %}

@@ -1,0 +1,132 @@
+{% extends 'nav.html' %}  <!-- Extending nav.html -->
+{% load static %}
+
+{% block content %}
+  <!-- Page Content -->
+  <div class="pt-20">
+    {% if request.session.coordinator_name %}
+      <div class="flex h-screen mt-16">
+        <!-- Sidebar -->
+        <aside class="w-1/4 bg-white h-full p-6 shadow-lg hidden sm:block">
+          <nav class="space-y-4 mt-8">
+            <a href="{% url 'coordinator_dashboard' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Dashboard</a>
+            <a href="{% url 'eventspage1' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Events</a>
+            <a href="{% url 'notices' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Notice</a>
+            <a href="{% url 'logout' %}" class="block text-gray-800 font-medium hover:text-red-600 transition">Logout</a>
+          </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-10">
+          <!-- Header -->
+          <div class="bg-white rounded-lg shadow p-6 flex items-center justify-between mb-8">
+            <h1 class="text-2xl font-bold text-gray-800">My Events</h1>
+            <!-- Search Bar -->
+            <div class="relative">
+              <input 
+                type="text" 
+                placeholder="Search events..." 
+                class="border border-gray-300 rounded-lg py-2 px-4 w-72 focus:outline-none focus:border-blue-500">
+              <i class="absolute right-3 top-3 text-gray-400 fa-solid fa-search"></i>
+            </div>
+          </div>
+
+          <!-- Events Section -->
+          <div class="space-y-6">
+            {% for event in eve %}
+              <div class="bg-blue-50 p-6 rounded-lg shadow-lg relative">
+                <h2 class="text-lg font-medium text-gray-800">{{ event.event_name }}</h2>
+                
+                <div class="absolute bottom-4 right-4 flex space-x-2">
+                  <a href="{% url 'modify_event' event.id %}" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
+                    Modify Event
+                  </a>
+                  <!-- Delete Button with CSRF Protection -->
+                  <form action="{% url 'delete_event' event.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">
+                      Delete Event
+                    </button>
+                  </form>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </main>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+{% comment %} {% extends 'nav.html' %}  <!-- Extending nav_coor.html -->
+ <!-- Coordinator dashboard for club admin -->
+{% load static %}
+
+{% block content %}
+
+       <!-- Page Content -->
+    <div class="pt-20">
+      {% if request.session.coordinator_name %}
+          <div class="flex h-screen mt-16">
+              <!-- Sidebar -->
+              <aside class="w-1/4 bg-white h-full p-6 shadow-lg hidden sm:block">
+                  <nav class="space-y-4 mt-8">
+                      <a href="{% url 'coordinator_dashboard' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Dashboard</a>
+                      <a href="{% url 'eventspage1' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Events</a>
+                      <a href="{% url 'notices' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Notice</a>
+                      <a href="{% url 'logout' %}" class="block text-gray-800 font-medium hover:text-red-600 transition">Logout</a>
+                  </nav>
+              </aside>
+              <!-- Main Content -->
+              <main class="flex-1 p-10">
+
+
+      <!-- Header -->
+      <div class="bg-white rounded-lg shadow p-6 flex items-center justify-between mb-8">
+        <h1 class="text-2xl font-bold text-gray-800">My Events</h1>
+        <!-- Search Bar -->
+        <div class="relative">
+          <input 
+            type="text" 
+            placeholder="Search events..." 
+            class="border border-gray-300 rounded-lg py-2 px-4 w-72 focus:outline-none focus:border-blue-500">
+          <i class="absolute right-3 top-3 text-gray-400 fa-solid fa-search"></i>
+        </div>
+      </div>
+
+      <!-- Events Section -->
+      <div class="space-y-6">
+        {% for event in eve %}
+        <div class="bg-blue-50 p-6 rounded-lg shadow-lg relative">
+          <h2 class="text-lg font-medium text-gray-800">{{ event.event_name }}</h2>
+          
+          <div class="absolute bottom-4 right-4 flex space-x-2">
+
+            <a href="{% url 'modify_event' event.id %}" 
+               class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
+               Modify Event
+            </a>
+            <!-- 🛠 Corrected Delete Button with Form -->
+            <form action="{% url 'delete_event' event.id %}" method="POST">
+              {% csrf_token %}
+              <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">
+                Delete Event
+              </button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+  </div>
+</body>
+</html>
+{% endblock %} {% endcomment %}

@@ -21,7 +21,8 @@ class dEvent(models.Model):
     event_poster = models.ImageField(upload_to='event_posters/', blank=True)
     event_venue = models.CharField(max_length = 40)
     registration_link = models.URLField(max_length=200, blank=True, null=True)
-    fest_name = models.ForeignKey(Fest,null=True,on_delete=models.CASCADE)
+    fest_name = models.ForeignKey(Fest,null=True,blank=True, on_delete=models.CASCADE)
+    
     def __str__(self):
         return self.event_name
    

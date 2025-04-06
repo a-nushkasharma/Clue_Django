@@ -1,62 +1,93 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    {% load static %}
-    <meta charset="utf-8">
-    <title>Login</title>
-    <link rel="stylesheet" href="{% static 'css/signupStyle.css' %}">
-  </head>
-  <body>
-    <div class="center">
+{% extends 'nav.html' %}
+{% load static %}
 
-      {% if messages %}
-          {% for message in messages %}
-              {% if message.tags == 'error' %}
-                  <center><h4 style="color: firebrick;">{{message}}</h4></center>
-              {% else %}
-                  <center><h4 style="color: dodgerblue;">{{message}}</h4></center>
-              {% endif %}
-          {% endfor %}
-      {% endif %}
-        
-      <form method="POST">      
-        
-        <div class="imgcontainer" style="position: relative;">
-            <img src="{% static 'img/Banasthali_Vidyapeeth_Logo.png' %}" alt="Avatar" class="avatar">
-            <span onclick="redirectToHome()" class="close" title="Close Modal">&times;</span>
-          </div>
-      
-        {% csrf_token %}
+{% block content %}
+<div style="
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+">
+    <!-- Blurred Background -->
+    <div style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('{% static 'img/dept_header.jpg' %}') no-repeat center center/cover;
+        filter: blur(8px);
+        z-index: -1;
+    "></div>
 
-        <div class="txt_field">
-          <input type="text" required name="username">
-          <span></span>
-          <label>Username</label>
-        </div>
+    <div class="center" style="
+        background: white;
+        border-radius: 10px;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+        padding: 20px;
+        width: 350px;
+        position: relative;
+    ">
+        {% if messages %}
+            {% for message in messages %}
+                <center><h4 style="color: {% if message.tags == 'error' %}firebrick{% else %}dodgerblue{% endif %};">{{ message }}</h4></center>
+            {% endfor %}
+        {% endif %}
 
-        <div class="txt_field">
-          <input type="password" required name="password">
-          <span></span>
-          <label>Password</label>
-        </div>
+        <form method="POST">      
+            <div class="imgcontainer" style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                margin-bottom: 15px;
+                position: relative;
+            ">
+                <img src="{% static 'img/Banasthali_Vidyapeeth_Logo.png' %}" 
+                    alt="Avatar" 
+                    class="avatar" 
+                    style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #2691d9;">
+                
+                <span onclick="window.location.href='{% url 'home' %}';" 
+                    class="close" 
+                    style="position: absolute; top: 5px; right: 10px; font-size: 20px; font-weight: bold; color: #333; cursor: pointer;">
+                    &times;
+                </span>
+            </div>
+            
+            {% csrf_token %}
 
-        <input type="submit" value="Login">
-        <div class="signup_link">
-            Login as Student? <a href="{% url 'login' %}">Login</a>
-        </div>
-      </form>
+            <div class="txt_field" style="position: relative; border-bottom: 2px solid #adadad; margin: 15px 0;">
+                <input type="text" required name="username" style="width: 100%; padding: 6px; font-size: 14px; border: none; background: none; outline: none;">
+                <label style="position: absolute; top: 50%; left: 5px; color: #adadad; transform: translateY(-50%); font-size: 14px; pointer-events: none; transition: .3s;">Username</label>
+            </div>
+            
+            <div class="txt_field" style="position: relative; border-bottom: 2px solid #adadad; margin: 15px 0;">
+                <input type="password" required name="password" style="width: 100%; padding: 6px; font-size: 14px; border: none; background: none; outline: none;">
+                <label style="position: absolute; top: 50%; left: 5px; color: #adadad; transform: translateY(-50%); font-size: 14px; pointer-events: none; transition: .3s;">Password</label>
+            </div>
+            
+            <input type="submit" value="Login" style="width: 100%; height: 40px; border: none; background: #2691d9; border-radius: 20px; font-size: 16px; color: white; font-weight: 600; cursor: pointer; outline: none; transition: 0.3s;">
+            
+            <div class="signup_link" style="margin-top: 10px; text-align: center; font-size: 13px;">
+                Login as Student? <a href="{% url 'login' %}" style="color: #2691d9; text-decoration: none;">Login</a>
+            </div>
+        </form>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelector(".close").addEventListener("click", function () {
-                window.location.href = "{% url 'home' %}"; // Replace 'home' with your actual URL name
-            });
-        });
-    </script>
-    
 
-  </body>
-</html>
-
-
-
+    <!-- Footer -->
+    <footer style="
+        background-color: #132E57; 
+        color: white; 
+        text-align: center; 
+        padding: 10px; 
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+    ">
+        © 2025 College Link Up for Events. All Rights Reserved.
+    </footer>
+</div>
+{% endblock %}

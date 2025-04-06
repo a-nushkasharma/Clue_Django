@@ -12,7 +12,9 @@ urlpatterns = [
     path('reset-password/<str:reset_id>/', views.ResetPassword, name='reset-password'),
     path('profile/', views.profile, name='profile'),
     path('coordinator_login/', views.coordinator_view, name='coordinator_login'),
-    path('coordinator_dashboard/', views.coordinator_dash, name='coordinator_dashboard'),
+    path('coordinator_dashboard/', views.coordinator_dashboard, name='coordinator_dashboard'),
+    #path('coordinator_dashboard_dept/', views.coordinator_dash_dept, name='coordinator_dashboard_dept'),
+
 
 
 ]

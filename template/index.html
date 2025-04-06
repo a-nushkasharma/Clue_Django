@@ -12,7 +12,7 @@
             {% endfor %}
 
             
-            <div id="slideshow container" class="w-full h-[80vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] bg-cover bg-center relative overflow-hidden mt-10 md:block hidden">
+            <div id="slideshow container" class="w-full h-[80vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] bg-cover bg-center relative overflow-hidden mt-2 md:block hidden">
                 <div id="slideshow" class="absolute top-0 left-0 flex w-full md:h-[70vh] lg:h-[80vh] transition-transform duration-1000 ease-in-out">
                     <div class="w-full h-full flex-shrink-0">
                         <img src="{% static 'img/event_image2.jpg' %}" class="w-full h-full object-cover" alt="Event 2">
@@ -73,8 +73,109 @@
                     }, 5000);
                 });
             </script>
-        
             <div id="notice" class="mt-4">
+                <div class="px-4 py-10 bg-white shadow-md rounded-lg">
+                    <h2 class="text-3xl font-bold mb-4 text-gray-800">Latest from Campus</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        
+                        <!-- Latest News/Notices -->
+                        <div class="border-t-4 border-yellow-400 rounded-md bg-gray-100 p-6 h-72 overflow-hidden">
+                            <div class="flex items-center mb-4">
+                                <span class="text-blue-900 font-bold text-lg">
+                                    <i class="fa-solid fa-newspaper"></i> Latest News/Notices
+                                </span>
+                            </div>
+                            <div class="relative h-40 overflow-hidden">
+                                <ul id="news-ticker" class="space-y-2 text-sm text-blue-700 transition-all duration-500">
+                                    {% for notice in notices %}
+                                        <li>
+                                            <strong>{{ notice.title }}</strong> - {{ notice.date_posted|date:"d F Y" }}<br>
+                                            <span class="text-gray-600">{{ notice.description|truncatechars:100 }}</span>
+                                        </li>
+                                    {% empty %}
+                                        <li>No notices available.</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <button class="mt-4 text-white bg-blue-900 px-4 py-1 text-sm rounded hover:bg-purple-900">
+                                View all »
+                            </button>
+                        </div>
+            
+                        <!-- Upcoming Department Events -->
+                        <div class="border-t-4 border-yellow-400 rounded-md bg-gray-100 p-6 h-72 overflow-hidden">
+                            <div class="flex items-center mb-4">
+                                <span class="text-blue-900 font-bold text-lg">
+                                    <i class="fa-regular fa-calendar"></i> From Departments
+                                </span>
+                            </div>
+                            <div class="mt-2 relative h-40 overflow-hidden">
+                                <ul id="dept-ticker" class="space-y-2 text-sm text-blue-700 transition-all duration-500">
+                                    {% for d_event in d_events %}
+                                        <li>
+                                            <strong>{{ d_event.event_name }}</strong><br>
+                                            <span class="text-gray-600">Venue: {{ d_event.event_venue }}</span>
+                                        </li>
+                                    {% empty %}
+                                        <li>No upcoming department events.</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <button class="mt-4 text-white bg-blue-900 px-4 py-1 text-sm rounded hover:bg-purple-900">
+                                View all »
+                            </button>
+                        </div>
+            
+                        <!-- Upcoming Club Events -->
+                        <div class="border-t-4 border-yellow-400 rounded-md bg-gray-100 p-6 h-72 overflow-hidden">
+                            <div class="flex items-center mb-4">
+                                <span class="text-blue-900 font-bold text-lg">
+                                    <i class="fa-solid fa-user-group"></i> From Clubs
+                                </span>
+                            </div>
+                            <div class="mt-2 relative h-40 overflow-hidden">
+                                <ul id="club-ticker" class="space-y-2 text-sm text-blue-700 transition-all duration-500">
+                                    {% for event in events %}
+                                        <li>
+                                            <strong>{{ event.event_name }}</strong> <br>
+                                            <span class="text-gray-600">Date: {{ event.event_start_date|date:"d F Y" }}</span>
+                                        </li>
+                                    {% empty %}
+                                        <li>No upcoming club events.</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <button class="mt-4 text-white bg-blue-900 px-4 py-1 text-sm rounded hover:bg-purple-900">
+                                View all »
+                            </button>
+                        </div>
+            
+                    </div>
+                </div>
+            </div>
+            
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    const startTicker = (tickerId, speed, stepHeight) => {
+                        const ticker = document.getElementById(tickerId);
+                        let scrollPosition = 0;
+            
+                        setInterval(() => {
+                            scrollPosition -= stepHeight;
+                            if (Math.abs(scrollPosition) >= ticker.scrollHeight) {
+                                scrollPosition = 0;
+                            }
+                            ticker.style.transform = `translateY(${scrollPosition}px)`;
+                        }, speed);
+                    };
+            
+                    startTicker("news-ticker", 2000, 24);
+                    startTicker("dept-ticker", 2500, 24);
+                    startTicker("club-ticker", 3000, 24);
+                });
+            </script>
+            
+            {% comment %} <div id="notice" class="mt-4">
                 <div class="px-4 py-10 bg-white shadow-md rounded-lg">
                     <h2 class="text-3xl font-bold mb-4 text-gray-800">Latest from Campus</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -84,9 +185,11 @@
                             </div>
                             <div class="relative h-40 overflow-hidden">
                                 <ul id="news-ticker" class="space-y-2 text-sm text-blue-700 transition-all duration-500">
-                                    <li>Blitzschlag’25 will be held from 06th to 09th February 2025</li>
-                                    <li>Advertisement for JRF project on "Development of Novel Electrocatalyst..."</li>
-                                    <li>Important notice regarding Semester Exams AY 2024-25</li>
+                                    {% for notice in notices %}
+                                        <li>{{ notice.title }} - {{ notice.date_posted|date:"d F Y" }}</li>
+                                    {% empty %}
+                                        <li>No notices available.</li>
+                                    {% endfor %}
                                 </ul>
                             </div>
                             <button class="mt-4 text-white bg-blue-900 px-4 py-1 text-sm rounded hover:bg-purple-900">
@@ -155,11 +258,16 @@
                     startTicker("dept-ticker", 2500, 24);
                     startTicker("club-ticker", 3000, 24);
                 });
-            </script>
+            </script> {% endcomment %}
         
-            <div id="faq">
-                <div class="w-full p-6 bg-white rounded-lg shadow-lg">
-                    <h1 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">FAQ :</h1>
+                            
+            <div id="faq-container" class="w-full p-6 bg-white rounded-lg shadow-lg">
+                <button id="toggle-faq" class="w-full text-left px-4 py-2 rounded-md text-2xl font-bold text-gray-800 mb-6 border-b pb-3">
+                    Show FAQ⬇️
+                </button>
+
+                <div id="faq-content" class="mt-4 hidden">
+                
                     <div class="space-y-4">
                         <details class="border border-gray-200 rounded-md">
                             <summary class="px-4 py-2 font-medium text-gray-700 cursor-pointer hover:bg-gray-100">
@@ -169,7 +277,7 @@
                                 There is not a specific count as every department has several clubs.
                             </div>
                         </details>
-            
+
                         <details class="border border-gray-200 rounded-md">
                             <summary class="px-4 py-2 font-medium text-gray-700 cursor-pointer hover:bg-gray-100">
                                 How can I apply for an event?
@@ -178,7 +286,7 @@
                                 You can apply by logging in and creating your profile.
                             </div>
                         </details>
-            
+
                         <details class="border border-gray-200 rounded-md">
                             <summary class="px-4 py-2 font-medium text-gray-700 cursor-pointer hover:bg-gray-100">
                                 Is there any fee to attend events?
@@ -187,7 +295,7 @@
                                 Fee structure of each club is decided by the type of events that are hosted by them.
                             </div>
                         </details>
-            
+
                         <details class="border border-gray-200 rounded-md">
                             <summary class="px-4 py-2 font-medium text-gray-700 cursor-pointer hover:bg-gray-100">
                                 Can I be a part of any clubs?
@@ -196,7 +304,7 @@
                                 Yes, you can be part of a club by contacting the club leads.
                             </div>
                         </details>
-            
+
                         <details class="border border-gray-200 rounded-md">
                             <summary class="px-4 py-2 font-medium text-gray-700 cursor-pointer hover:bg-gray-100">
                                 Can I have the email of club leads?
@@ -205,7 +313,7 @@
                                 Yes, emails of each club's leads are mentioned in their club profiles.
                             </div>
                         </details>
-            
+
                         <details class="border border-gray-200 rounded-md">
                             <summary class="px-4 py-2 font-medium text-gray-700 cursor-pointer hover:bg-gray-100">
                                 How to make a profile?
@@ -214,7 +322,7 @@
                                 You have to log in through the Banasthali email ID given by the department.
                             </div>
                         </details>
-            
+
                         <details class="border border-gray-200 rounded-md">
                             <summary class="px-4 py-2 font-medium text-gray-700 cursor-pointer hover:bg-gray-100">
                                 Do I get notifications of the club events?
@@ -223,7 +331,7 @@
                                 Yes, club events' notifications will be sent 24 hours prior to your emails.
                             </div>
                         </details>
-            
+
                         <details class="border border-gray-200 rounded-md">
                             <summary class="px-4 py-2 font-medium text-gray-700 cursor-pointer hover:bg-gray-100">
                                 What is the C.L.U.E. and its motto?
@@ -235,6 +343,19 @@
                     </div>
                 </div>
             </div>
+
+            <script>
+                document.getElementById("toggle-faq").addEventListener("click", function () {
+                    let faqContent = document.getElementById("faq-content");
+                    if (faqContent.classList.contains("hidden")) {
+                        faqContent.classList.remove("hidden");
+                        this.textContent = "Hide FAQ⬆️ ";
+                    } else {
+                        faqContent.classList.add("hidden");
+                        this.textContent = "Show FAQ⬇️";
+                    }
+                });
+            </script>
         </main>
     
     

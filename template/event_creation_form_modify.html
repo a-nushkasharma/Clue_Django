@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modify Event | CLUE</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/output.css">
+</head>
+
+<body class="bg-gray-100">
+    <main class="flex justify-center items-center min-h-screen">
+        <div class="w-full max-w-lg p-8 bg-white rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Modify Event</h2>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <label class="block text-gray-700 mb-2">Event Title</label>
+                {{ form.event_name }}
+
+                <label class="block text-gray-700 mb-2">Start Date</label>
+                {{ form.event_start_date }}
+
+                <label class="block text-gray-700 mb-2">End Date</label>
+                {{ form.event_end_date }}
+
+                <label class="block text-gray-700 mb-2">Event Time</label>
+                {{ form.event_time }}
+
+                <label class="block text-gray-700 mb-2">Department</label>
+                {{ form.department_name }}
+
+                <label class="block text-gray-700 mb-2">Club Name</label>
+                {{ form.club_name }}
+
+                <label class="block text-gray-700 mb-2">Venue</label>
+                {{ form.event_venue }}
+
+                <label class="block text-gray-700 mb-2">Upload New Poster (Optional)</label>
+                {{ form.event_poster }}
+                {% if event.event_poster %}
+                    <p class="text-sm text-gray-600">Current Poster:</p>
+                    <img src="{{ event.event_poster.url }}" alt="Event Poster" class="mb-4 rounded-md w-full">
+                {% endif %}
+
+                <label class="block text-gray-700 mb-2">Event URL</label>
+                {{ form.registration_link }}
+
+                <button type="submit" class="bg-blue-500 text-white px-6 py-3 rounded-md mt-4 w-full">
+                    Update Event
+                </button>
+            </form>
+        </div>
+    </main>
+</body>
+
+
+    <footer class="w-full bg-blue-200 mt-8">
+        <div class="rounded-lg border bg-sky-50 flex flex-col lg:flex-row-reverse items-center px-8 py-12 gap-8">
+            <a href="https://www.banasthali.org/" class="font-light">www.banasthali.org</a>
+            <div class="flex gap-8 text-lg">
+                <a href="#" class="text-gray-600 hover:text-gray-900"><i class="fa-solid fa-envelope"></i></a>
+                <a href="#" class="text-gray-600 hover:text-gray-900"><i class="fa-brands fa-github"></i></a>
+            </div>
+            <a href="#" id="brand" class="flex gap-2 items-center flex-1">
+                <img class="object-cover max-w-12 max-h-12" src="/static/img/Banasthali_Vidyapeeth_Logo.png" alt="Logo">
+                <span class="text-lg font-medium">C.L.U.E</span>
+            </a>
+        </div>
+        <div id="sub-footer" class="flex flex-col gap-6 items-center justify-center my-12">
+            <p class="text-sm text-gray-400">©2025 C.L.U.E. All rights reserved</p>
+        </div>
+    </footer>
+</body>
+
+<script src="/static/script.js"></script>
+</html>

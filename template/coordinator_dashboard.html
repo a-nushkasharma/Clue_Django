@@ -1,60 +1,102 @@
+{% extends 'nav.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLUE</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="{% static 'output.css' %}">
-</head>
+{% block content %}
 
-<body class="bg-gray-100 font-sans">
-    <!-- Navbar -->
-    <nav class="p-3 flex bg-blue-950 text-white justify-between items-center fixed top-0 left-0 right-0 z-20 shadow-md">
-        <a href="https://www.banasthali.org/" id="brand" class="flex gap-2 items-center flex-1">
-            <img class="object-cover max-w-16 max-h-16" src="{% static 'img/Banasthali_Vidyapeeth_Logo.png' %}" alt="Logo">
-            <img class="object-cover max-w-13 max-h-12" src="{% static 'img/clue_logo.png' %}" alt="Logo2">
-        </a>
-        
-        <div id="nav-menu" class="hidden lg:flex gap-12">
-            <a href="{% url 'home' %}" class="font-medium hover:text-blue-800">Home</a>
-            <a href="#" class="font-medium hover:text-blue-800">Clubs</a>
-            <a href="#" class="font-medium hover:text-blue-800">Departments</a>
-        </div>
+<!-- Page Content -->
+<div class="pt-20">
+    {% if request.session.coordinator_name %}
+        <div class="flex h-screen mt-16">
+            <!-- Sidebar -->
+            <aside class="w-1/4 bg-white h-full p-6 shadow-lg hidden sm:block">
+                <nav class="space-y-4 mt-8">
+                    <a href="{% url 'coordinator_dashboard' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Dashboard</a>
+                    <a href="{% url 'eventspage1' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Events</a>
+                    <a href="{% url 'notices' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Notice</a>
+                    <a href="{% url 'logout' %}" class="block text-gray-800 font-medium hover:text-red-600 transition">Logout</a>
+                </nav>
+            </aside>
+            <!-- Main Content -->
+            <main class="flex-1 p-10">
+                <!-- Header -->
+                <div class="bg-white rounded-lg shadow p-6 flex items-center justify-between mb-8">
+                    <div class="flex items-center">
+                        <div class="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 shadow-md">
+                            <div class="w-30 h-24 rounded-full overflow-hidden shadow-md">
+                                <img src="{% static 'img/Banasthali_Vidyapeeth_Logo.png' %}" alt="Profile Photo" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                        <div class="ml-6">
+                            <h2 class="text-xl font-semibold text-gray-800">{{ coordinator_name }}</h2>
+                            {% if coordinator.email %}
+                                <p class="text-sm text-gray-600">{{ coordinator.email }}</p>
+                            {% else %}
+                                <p class="text-sm text-red-500">Email not provided</p>
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+                </div>
 
-        <div class="hidden lg:flex flex-1 justify-end">
-            <button class="flex gap-2 items-center border border-gray-400 px-6 py-2 rounded-lg hover:border-gray-600" onclick="window.location.href='{% url 'coordinator_dashboard' %}'">
-                <i class="fa-solid fa-circle-user"></i>
-                <span>{{ coordinatore.name }}</span>
-                <i class="fa-solid fa-arrow-right"></i>
-            </button>
-        </div>
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-2 gap-6">
+                    <button class="w-full py-4 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 transition" 
+                         onclick="window.location.href='{% url 'create_event' %}'">
+                         Create Event
+                    </button>
+                    <a href="{% url 'logout' %}" class="w-full py-4 bg-red-600 text-white font-medium rounded-lg shadow hover:bg-red-700 transition text-center">
+                        Logout
+                    </a>
+                </div>
+            </main>
+        </div> <!-- Closing the correct `div` -->
 
-        <button class="p-2 lg:hidden" onclick="handleMenu()">
-            <i class="fa-solid fa-bars text-gray-600"></i>
-        </button>
-    </nav>
+    {% else %}
+        <p class="text-red-500 text-center text-lg">Unauthorized Access. Please <a href="{% url 'login' %}" class="text-blue-600">login</a>.</p>
+    {% endif %}
+</div>
 
-    <!-- Main Layout -->
-    <div class="flex h-screen mt-16">
-        <!-- Sidebar -->
-        <aside class="w-1/4 bg-white h-full p-6 shadow-lg hidden sm:block">
-            <nav class="space-y-4 mt-8">
-                <a href="{% url 'coordinator_dashboard' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Dashboard</a>
-                <a href="#" class="block text-gray-800 font-medium hover:text-blue-600 transition">Events</a>
-                <a href="#" class="block text-gray-800 font-medium hover:text-blue-600 transition">Notifications</a>
-                <a href="#" class="block text-gray-800 font-medium hover:text-blue-600 transition">Settings</a>
-                <a href="{% url 'logout' %}" class="block text-gray-800 font-medium hover:text-red-600 transition">Logout</a>
-            </nav>
-        </aside>
+<script>
+    function handleMenu() {
+        const navDialog = document.getElementById('nav-dialog');
+        navDialog.classList.toggle('hidden');
+    }
+</script>
 
-        <!-- Main Content -->
-        <main class="flex-1 p-10">
+{% endblock %}
+
+
+
+
+
+
+
+
+{% comment %} {% extends 'nav.html' %}  <!-- Extending nav_coor.html -->
+ <!-- Coordinator dashboard for club admin -->
+{% load static %}
+
+{% block content %}
+
+           <!-- Page Content -->
+    <div class="pt-20">
+        {% if request.session.coordinator_name %}
+            <div class="flex h-screen mt-16">
+                <!-- Sidebar -->
+                <aside class="w-1/4 bg-white h-full p-6 shadow-lg hidden sm:block">
+                    <nav class="space-y-4 mt-8">
+                        <a href="{% url 'coordinator_dashboard' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Dashboard</a>
+                        <a href="{% url 'eventspage1' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Events</a>
+                        <a href="{% url 'notices' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Notice</a>
+                        <a href="{% url 'logout' %}" class="block text-gray-800 font-medium hover:text-red-600 transition">Logout</a>
+                    </nav>
+                </aside>
+                <!-- Main Content -->
+                <main class="flex-1 p-10">
+                    {% endif %}
+
+
+
             <!-- Header -->
             <div class="bg-white rounded-lg shadow p-6 flex items-center justify-between mb-8">
                 <!-- Profile Section -->
@@ -77,8 +119,9 @@
 
             <!-- Action Buttons -->
             <div class="grid grid-cols-2 gap-6">
-                <button class="w-full py-4 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 transition" onclick="window.location.href='#'">
-                    Create Event
+                <button class="w-full py-4 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 transition" 
+                     onclick="window.location.href='{% url 'create_event' %}'">
+                     Create Event
                 </button>
                 <a href="{% url 'logout' %}" class="w-full py-4 bg-red-600 text-white font-medium rounded-lg shadow hover:bg-red-700 transition text-center">
                     Logout
@@ -99,3 +142,4 @@
     </script>
 </body>
 </html>
+{%endblock%} {% endcomment %}

@@ -11,7 +11,8 @@ urlpatterns = [
     path('home/', include('home.urls')),  # If home is also in signup
     path('',include('home.urls')),
     path('event/',include('event.urls') ),
-    path('department/',include('department.urls') ),
+    path('department/',include('department.urls')),
+    path('admin_handling/',include('admin_handling.urls')),
 ]
 
 if settings.DEBUG:

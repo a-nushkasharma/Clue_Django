@@ -8,9 +8,11 @@ urlpatterns= [
     path('clubs/', club_list, name='clubs'),
     path('club/<str:club_name>/', club_detail, name='club_detail'),
     path('club/<str:club_name>/<int:event_id>/',event_detail, name='event_detail'),
-    # path('events/', event_list, name='event_list'),
-    # path('club/<str:club_name>/events/', club_event_list, name='club_event_list'),
-    path('up/', up, name='up'),
+    path('notices/',notice_view, name='notices'),
+    path('notices/delete/<int:notice_id>/', delete_notice, name='delete_notice'),
+  
+
+
 ]
 
 if settings.DEBUG:

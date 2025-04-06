@@ -1,0 +1,271 @@
+{% extends 'nav.html' %}  <!-- Extending nav.html -->
+{% load static %}
+
+{% block content %}
+  <!-- Page Content -->
+  <div class="pt-20">
+    {% if request.session.coordinator_name %}
+      <div class="flex h-screen mt-16">
+        
+        <!-- Sidebar (Full Height) -->
+        <aside class="w-1/4 bg-white h-full p-6 shadow-lg hidden sm:block">
+          <nav class="space-y-4 mt-8">
+            <a href="{% url 'coordinator_dashboard' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Dashboard</a>
+            <a href="{% url 'eventspage1' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Events</a>
+            <a href="{% url 'notices' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Notices</a>
+            <a href="{% url 'logout' %}" class="block text-gray-800 font-medium hover:text-red-600 transition">Logout</a>
+          </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <div class="flex-1 px-6 overflow-y-auto">
+          
+          <!-- Header -->
+          <div class="bg-white rounded-lg shadow p-6 flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">My Notices</h1>
+            <button onclick="openNoticePopup()" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition">
+              + Create Notice
+            </button>
+          </div>
+
+          <!-- Notices List -->
+          <div class="space-y-6">
+            {% for notice in notices %}
+            <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200 relative">
+              <h2 class="text-lg font-semibold text-gray-900">{{ notice.title }}</h2>
+              <p class="text-gray-700 mt-1">{{ notice.description }}</p>
+              <p class="text-gray-500 text-sm mt-2">Posted on: {{ notice.date_posted }}</p>
+
+              <!-- Delete Notice Button -->
+              <form action="{% url 'delete_notice' notice.id %}" method="POST" class="absolute bottom-4 right-4">
+                {% csrf_token %}
+                <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition">
+                  Delete
+                </button>
+              </form>
+            </div>
+            {% empty %}
+              <p class="text-gray-500 text-center">No notices available.</p>
+            {% endfor %}
+          </div>
+
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Create Notice Popup Modal -->
+  <div id="noticePopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-11/12 sm:w-1/2 transition transform scale-95">
+      <h2 class="text-2xl font-bold mb-4">Create Notice</h2>
+
+      <form method="POST">
+        {% csrf_token %}
+
+        <label class="block mb-2 font-semibold">Title:</label>
+        <input type="text" name="title" class="border p-2 w-full rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+
+        <label class="block mb-2 font-semibold">Description:</label>
+        <textarea name="description" class="border p-2 w-full rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+
+        <div class="flex justify-end">
+          <button type="button" onclick="closeNoticePopup()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg mr-2 hover:bg-gray-400 transition">Cancel</button>
+          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openNoticePopup() {
+      let popup = document.getElementById('noticePopup');
+      popup.classList.remove('hidden');
+      popup.querySelector('.transition').classList.add('scale-100');
+    }
+
+    function closeNoticePopup() {
+      let popup = document.getElementById('noticePopup');
+      popup.classList.add('hidden');
+      popup.querySelector('.transition').classList.remove('scale-100');
+    }
+  </script>
+
+{% endblock %}
+
+
+
+
+
+
+{% comment %} {% extends 'nav.html' %}  <!-- Extending nav.html -->
+{% load static %}
+
+{% block content %}
+  <!-- Page Content -->
+  <div class="pt-20 px-6 bg-gray-100 min-h-screen">
+    {% if request.session.coordinator_name %}
+      <div class="flex flex-col sm:flex-row mt-16">
+        
+        <!-- Sidebar -->
+        <aside class="w-1/4 bg-white h-full p-6 shadow-lg hidden sm:block">
+            <nav class="space-y-4 mt-8">
+            <a href="{% url 'coordinator_dashboard' %}" class="block text-gray-800 font-semibold hover:text-blue-600 transition">Dashboard</a>
+            <a href="{% url 'eventspage1' %}" class="block text-gray-800 font-semibold hover:text-blue-600 transition">Events</a>
+            <a href="{% url 'notices' %}" class="block text-gray-800 font-semibold hover:text-blue-600 transition">Notices</a>
+            <a href="{% url 'logout' %}" class="block text-red-600 font-semibold hover:text-red-800 transition">Logout</a>
+          </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <div class="flex-1 px-4">
+          
+          <!-- Header -->
+          <div class="bg-white rounded-lg shadow p-6 flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">My Notices</h1>
+            <button onclick="openNoticePopup()" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition">
+              + Create Notice
+            </button>
+          </div>
+
+          <!-- Notices List -->
+          <div class="space-y-6">
+            {% for notice in notices %}
+            <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200 relative">
+              <h2 class="text-lg font-semibold text-gray-900">{{ notice.title }}</h2>
+              <p class="text-gray-700 mt-1">{{ notice.description }}</p>
+              <p class="text-gray-500 text-sm mt-2">Posted on: {{ notice.date_posted }}</p>
+
+              <!-- Delete Notice Button -->
+              <form action="{% url 'delete_notice' notice.id %}" method="POST" class="absolute bottom-4 right-4">
+                {% csrf_token %}
+                <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition">
+                  Delete
+                </button>
+              </form>
+            </div>
+            {% empty %}
+              <p class="text-gray-500 text-center">No notices available.</p>
+            {% endfor %}
+          </div>
+
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Create Notice Popup Modal -->
+  <div id="noticePopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-11/12 sm:w-1/2 transition transform scale-95">
+      <h2 class="text-2xl font-bold mb-4">Create Notice</h2>
+
+      <form method="POST">
+        {% csrf_token %}
+
+        <label class="block mb-2 font-semibold">Title:</label>
+        <input type="text" name="title" class="border p-2 w-full rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+
+        <label class="block mb-2 font-semibold">Description:</label>
+        <textarea name="description" class="border p-2 w-full rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+
+        <div class="flex justify-end">
+          <button type="button" onclick="closeNoticePopup()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg mr-2 hover:bg-gray-400 transition">Cancel</button>
+          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openNoticePopup() {
+      let popup = document.getElementById('noticePopup');
+      popup.classList.remove('hidden');
+      popup.querySelector('.transition').classList.add('scale-100');
+    }
+
+    function closeNoticePopup() {
+      let popup = document.getElementById('noticePopup');
+      popup.classList.add('hidden');
+      popup.querySelector('.transition').classList.remove('scale-100');
+    }
+  </script>
+
+{% endblock %} {% endcomment %}
+{% comment %} {% extends 'nav.html' %}  <!-- Extending nav.html -->
+{% load static %}
+
+{% block content %}
+  <!-- Page Content -->
+  <div class="pt-20">
+    {% if request.session.coordinator_name %}
+      <div class="flex h-screen mt-16">
+        <!-- Sidebar -->
+        <aside class="w-1/4 bg-white h-full p-6 shadow-lg hidden sm:block">
+          <nav class="space-y-4 mt-8">
+            <a href="{% url 'coordinator_dashboard' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Dashboard</a>
+            <a href="{% url 'eventspage1' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Events</a>
+            <a href="{% url 'notices' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Notice</a>
+            <a href="{% url 'logout' %}" class="block text-gray-800 font-medium hover:text-red-600 transition">Logout</a>
+          </nav>
+        </aside>
+        
+
+        <!-- Header -->
+<div class="bg-white rounded-lg shadow p-6 flex items-center justify-between mb-8">
+    <h1 class="text-2xl font-bold text-gray-800">My Notices</h1>
+    <button onclick="openNoticePopup()" class="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600">
+        Create Notice
+    </button>
+</div>
+
+<!-- Notices List -->
+<div class="space-y-6">
+    {% for notice in notices %}
+    <div class="bg-blue-50 p-6 rounded-lg shadow-lg relative">
+        <h2 class="text-lg font-medium text-gray-800">{{ notice.title }}</h2>
+        <p>{{ notice.description }}</p>
+        <p class="text-gray-600 text-sm">Posted on: {{ notice.date_posted }}</p>
+
+        <!-- Delete Notice Button -->
+        <form action="{% url 'delete_notice' notice.id %}" method="POST" class="absolute bottom-4 right-4">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">
+                Delete Notice
+            </button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Create Notice Popup Modal -->
+<div id="noticePopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-1/2">
+        <h2 class="text-2xl font-bold mb-4">Create Notice</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label class="block mb-2">Title:</label>
+            <input type="text" name="title" class="border p-2 w-full mb-4" required>
+
+            <label class="block mb-2">Description:</label>
+            <textarea name="description" class="border p-2 w-full mb-4" required></textarea>
+
+            <div class="flex justify-end">
+                <button type="button" onclick="closeNoticePopup()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2">Cancel</button>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Create Notice</button>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function openNoticePopup() {
+        document.getElementById('noticePopup').classList.remove('hidden');
+    }
+
+    function closeNoticePopup() {
+        document.getElementById('noticePopup').classList.add('hidden');
+    }
+</script>
+{% endblock %} {% endcomment %}

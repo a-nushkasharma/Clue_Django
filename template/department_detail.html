@@ -16,20 +16,20 @@
      <p class="mt-4 text-lg text-gray-700"></p>
    </div>
  </section>
- {% endcache %} 
+ {% endcache %}
 
   <!-- Department Poster -->
   {% if department.department_poster %}
     <div class="w-full flex justify-center mt-6">
-      <img src="{{ department.department_poster.url }}" 
+      <img src="{{ department.department_poster.url }}"
            alt="{{ department.department_name }} Poster"
            class="department-poster">
     </div>
-  {% endif %} 
+  {% endif %}
 
   <!-- Fest Section -->
   {% cache 600 fest_section department.department_name|default:"default_department" %}
-  <section id="fest" class="py-16"> 
+  <section id="fest" class="py-16">
     <div class="w-full">
       <h2 class="text-4xl font-bold text-center text-indigo-900 mb-6 bg-blue-200 py-4 w-full">
         Fests from {{ department.department_name|default:"Department" }}
@@ -39,7 +39,7 @@
       </p>
       <div class="max-w-6xl mx-auto bg-gray-100 p-10 rounded-lg shadow-lg">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-  
+ 
           {% for fest in fests %}
           <div class="bg-white p-6 rounded-lg shadow-md cursor-pointer">
             <a href="{% url 'fest_detail' department.department_name fest.fest_name %}">
@@ -50,6 +50,21 @@
           {% empty %}
             <p class="text-center text-gray-500">No fests available.</p>
           {% endfor %}
+        </div>
+        <h2 class="text-2xl font-bold mt-8 text-center">Standalone Events</h2>
+
+        <div class="flex gap-4 overflow-x-auto p-4">
+            {% for event in standalone_events %}
+            <div class="bg-white p-6 rounded-lg shadow-md cursor-pointer min-w-[250px]">
+              <a href="{% if event.fest_name %}{% url 'devent_detail' department.department_name event.fest_name event.event_name %}{% else %}{% url 'devent_detail' department.department_name event.event_name %}{% endif %}">
+
+                    <img src="{{ event.event_poster.url }}" alt="{{ event.event_name }}" class="rounded-md mb-4 w-full h-48 object-cover">
+                    <p class="text-lg font-semibold text-indigo-800 text-center">{{ event.event_name }}</p>
+                </a>
+            </div>
+            {% empty %}
+            <p class="text-center text-gray-500">No standalone events available.</p>
+            {% endfor %}
         </div>
       </div>
     </div>
@@ -106,71 +121,3 @@
     }
 }
 </style>
-
-
-
-{% comment %} {% extends "nav.html" %}
-{% load static %}
-{% load cache %}
-
-{% block title %}{{ club.club_name }} - CLUE{% endblock %}
-
-{% block content %}
-  <!-- Hero Section -->
-  {% cache 600 hero_section department.department_name|default:"default_department" %}
-  <section class="bg-indigo-100 py-16 mt-16">
-    <div class="max-w-6xl mx-auto px-6 text-center">
-      <h2 class="text-4xl font-bold text-indigo-900">
-        Welcome to {{ department.department_name|default:"Department" }}
-      </h2>
-      <p class="mt-4 text-lg text-gray-700"></p>
-    </div>
-  </section>
-  {% endcache %}
-
- 
-<div>
-   {% if department.department_poster %}
-    <div class="w-full flex justify-center">
-      <img src="{{ department.department_poster.url }}" 
-           alt="{{ department.department_name }} Poster"
-           class="w-1/2 h-64 object-cover rounded-lg">
-    </div>
-  {% endif %} 
-</div>
-  <p class="text-lg text-gray-700 text-center mt-4">
-    {{ department.department_description|default:"No description available" }}
-  </p>
-
- 
-
-  <!-- Fest Section -->
-{% cache 600 fest_section department.department_name|default:"default_department" %}
-<section id="fest" class="py-16"> 
-  <div class="max-w-6xl mx-auto px-6">
-    <h2 class="text-4xl font-bold text-center text-indigo-900 mb-6 bg-blue-200">
-      Fests from {{ department.department_name|default:"Department" }}
-    </h2>
-    <p class="text-lg text-gray-700 text-center mb-8">
-      Stay updated with the latest fests and activities from {{ department.department_name|default:"Department" }}.
-    </p>
-    <div class="bg-gray-100 p-10 rounded-lg shadow-lg">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {% for fest in fests %}
-        <div class="bg-white p-6 rounded-lg shadow-md cursor-pointer">
-          <a href="{% url 'fest_detail' department.department_name fest.fest_name %}">
-            <img src="{{ fest.fest_poster.url }}" class="w-full h-48 object-cover rounded-lg" alt="{{ fest.fest_name }}">
-              <p class="text-lg font-semibold text-indigo-800 text-center">{{ fest.fest_name }}</p>
-          </a>
-      </div>
-      
-        {% empty %}
-
-            <p class="text-center text-gray-500">No fests available.</p>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-  </section>
-  {% endcache %}
-{% endblock %} {% endcomment %}

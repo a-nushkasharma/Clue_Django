@@ -1,125 +1,151 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    {% load static %}
-    <meta charset="utf-8">
-    <title>Register</title>
-    <link rel="stylesheet" href="{% static 'css/signupStyle.css' %}">
-  </head>
-  <body>
-    <div class="center">
-      
-      {% if messages %}
-          {% for message in messages %}
-              {% if message.tags == 'error' %}
-                  <center><h4 class="error-message" style="color: firebrick;">{{ message }}</h4></center>
-              {% else %}
-                  <center><h4 class="error-message" style="color: dodgerblue;">{{ message }}</h4></center>
-              {% endif %}
-          {% endfor %}
-      {% endif %}
-      
-      {% if errors %}
-          {% for error in errors %}
-              <center><h4 class="error-message" style="color: firebrick;">{{ error }}</h4></center>
-          {% endfor %}
-      {% endif %}
-        
-      <form method="POST" onsubmit="return validateForm()">
-        <div class="imgcontainer">
-          <span onclick="closeModal()" class="close" title="Close">&times;</span>
-          <img src="{% static 'img/Banasthali_Vidyapeeth_Logo.png' %}" alt="Avatar" class="avatar">
-        </div>
-        
-        {% csrf_token %}
-      
-        <div class="txt_field">
-            <input type="text" required name="first_name" value="{{ first_name|default:'' }}">
-            <span></span>
-            <label>First Name</label>
-        </div>
+{% extends 'nav.html' %}
+{% load static %}
 
-        <div class="txt_field">
-            <input type="text" required name="last_name" value="{{ last_name|default:'' }}">
-            <span></span>
-            <label>Last Name</label>
-        </div>
+{% block content %}
+<div style="
+    display: flex; 
+    flex-direction: column; 
+    min-height: 100vh;
+    background: url('{% static 'img/dept_header.jpg' %}') no-repeat center center/cover;
+    position: relative;
+">
+    <div style="
+        flex-grow: 1; 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center; 
+        align-items: center;
+        position: relative;
+        padding-bottom: 60px; /* Space for footer */
+    ">
+        <!-- Blurred background overlay -->
+        <div style="
+            position: absolute; 
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+        "></div>
 
-        <div class="txt_field">
-          <input type="text" required name="username" value="{{ username|default:'' }}">
-          <span></span>
-          <label>Username</label>
-        </div>
+        {% if messages %}
+            <div id="messageContainer" style="position: relative; z-index: 2;">
+                {% for message in messages %}
+                    {% if 'success' in message.tags %}
+                        <center><h4 style="color: green;">{{ message }}</h4></center>
+                    {% elif 'error' in message.tags %}
+                        <center><h4 style="color: firebrick;">{{ message }}</h4></center>
+                    {% else %}
+                        <center><h4 style="color: dodgerblue;">{{ message }}</h4></center>
+                    {% endif %}
+                {% endfor %}
+            </div>  
+        {% endif %}
 
-        <div class="txt_field">
-            <input type="email" required name="email" id="email" value="{{ email|default:'' }}">
-            <span></span>
-            <label>Email</label>
-        </div>
+        <form method="POST" style="
+            background: rgba(255, 255, 255, 0.9); 
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.2); 
+            width: 380px; 
+            position: relative; 
+            z-index: 2;
+        ">
+            <div style="
+                text-align: center; 
+                margin-bottom: 20px; 
+                display: flex; 
+                flex-direction: column; 
+                align-items: center;
+            ">
+                <img src="{% static 'img/Banasthali_Vidyapeeth_Logo.png' %}" alt="Avatar" 
+                    style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #2691d9;">
+            </div>
 
-        <div class="txt_field">
-          <input type="password" required name="password" id="password">
-          <span></span>
-          <label>Password</label>
-        </div>    
+            {% csrf_token %}
 
-        <input type="submit" value="Register">
-        <div class="signup_link">
-          Already have an account? <a href="{% url 'login' %}">Login</a>
-        </div>
-      </form>
+            <div style="position: relative; border-bottom: 2px solid #adadad; margin: 15px 0;">
+                <input type="text" required name="first_name" value="{{ first_name|default:'' }}" 
+                    style="width: 100%; padding: 8px; font-size: 15px; border: none; background: none; outline: none;">
+                <label style="position: absolute; top: 50%; left: 5px; color: #adadad; transform: translateY(-50%); font-size: 15px; pointer-events: none; transition: .3s;">First Name</label>
+            </div>
+
+            <div style="position: relative; border-bottom: 2px solid #adadad; margin: 15px 0;">
+                <input type="text" required name="last_name" value="{{ last_name|default:'' }}" 
+                    style="width: 100%; padding: 8px; font-size: 15px; border: none; background: none; outline: none;">
+                <label style="position: absolute; top: 50%; left: 5px; color: #adadad; transform: translateY(-50%); font-size: 15px; pointer-events: none; transition: .3s;">Last Name</label>
+            </div>
+
+            <div style="position: relative; border-bottom: 2px solid #adadad; margin: 15px 0;">
+                <input type="text" required name="username" value="{{ username|default:'' }}" 
+                    style="width: 100%; padding: 8px; font-size: 15px; border: none; background: none; outline: none;">
+                <label style="position: absolute; top: 50%; left: 5px; color: #adadad; transform: translateY(-50%); font-size: 15px; pointer-events: none; transition: .3s;">Username</label>
+            </div>
+
+            <div style="position: relative; border-bottom: 2px solid #adadad; margin: 15px 0;">
+                <input type="email" required name="email" id="email" value="{{ email|default:'' }}" 
+                    style="width: 100%; padding: 8px; font-size: 15px; border: none; background: none; outline: none;">
+                <label style="position: absolute; top: 50%; left: 5px; color: #adadad; transform: translateY(-50%); font-size: 15px; pointer-events: none; transition: .3s;">Email</label>
+            </div>
+
+            <div style="position: relative; border-bottom: 2px solid #adadad; margin: 15px 0;">
+                <input type="password" required name="password" id="password" 
+                    style="width: 100%; padding: 8px; font-size: 15px; border: none; background: none; outline: none;">
+                <label style="position: absolute; top: 50%; left: 5px; color: #adadad; transform: translateY(-50%); font-size: 15px; pointer-events: none; transition: .3s;">Password</label>
+            </div>
+
+            <input type="submit" value="Register" 
+                style="width: 100%; height: 45px; border: none; background: #2691d9; border-radius: 25px; font-size: 17px; color: white; font-weight: 600; cursor: pointer; outline: none; transition: 0.3s;">
+
+            <div style="margin-top: 15px; text-align: center; font-size: 14px;">
+                Already have an account? <a href="{% url 'login' %}" style="color: #2691d9; text-decoration: none;">Login</a>
+            </div>
+        </form>
     </div>
 
-    <script>
-      function validateForm() {
-          let email = document.getElementById("email").value;
-          let password = document.getElementById("password").value;
-          let errors = [];
-          let emailPattern = /^[a-zA-Z0-9._%+-]+@banasthali\.in$/;
-          
-          if (!emailPattern.test(email)) {
-              errors.push("Only '@banasthali.in' domain emails are allowed.");
-          }
-          
-          if (password.length < 5) {
-              errors.push("Password must be at least 5 characters long.");
-          }
-    
-          if (errors.length > 0) {
-              alert(errors.join("\n")); // Display all errors in an alert box
-              return false;
-          }
-          
-          return true;
-      }
-    
-      document.addEventListener("DOMContentLoaded", function () {
-          document.querySelector(".close").addEventListener("click", function () {
-              window.location.href = "{% url 'home' %}";
-          });
-    
-          // Hide error messages after 5 seconds
-          setTimeout(function () {
-              let messages = document.querySelectorAll(".error-message");
-              messages.forEach(function (msg) {
-                  msg.style.transition = "opacity 0.001s";
-                  msg.style.opacity = "0";
-                  setTimeout(() => msg.style.display = "none", 500); // Hide completely after fading out
-              });
-          }, 5000);
-    
-          // Remove error messages when user starts typing
-          document.querySelectorAll("input").forEach(input => {
-              input.addEventListener("input", function () {
-                  let messages = document.querySelectorAll(".error-message");
-                  messages.forEach(function (msg) {
-                      msg.style.opacity = "0";
-                      setTimeout(() => msg.style.display = "none", 100); // Hide completely after a short delay
-                  });
-              });
-          });
-      });
-    </script>
-    
-  </body>
-</html> 
+    <!-- Footer sticks to the bottom -->
+    <footer style="
+        background-color: #132E57; 
+        color: white; 
+        text-align: center; 
+        padding: 10px; 
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+    ">
+        © 2025 College Link Up for Events. All Rights Reserved.
+    </footer>
+</div>
+
+<script>
+    function validateForm() {
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+        let errors = [];
+        let emailPattern = /^[a-zA-Z0-9._%+-]+@banasthali\.in$/;
+
+        if (!emailPattern.test(email)) {
+            errors.push("Only '@banasthali.in' domain emails are allowed.");
+        }
+
+        if (password.length < 5) {
+            errors.push("Password must be at least 5 characters long.");
+        }
+
+        if (errors.length > 0) {
+            alert(errors.join("\n"));
+            return false;
+        }
+        return true;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+            let messages = document.querySelectorAll(".error-message");
+            messages.forEach(msg => {
+                msg.style.opacity = "0";
+                setTimeout(() => msg.style.display = "none", 500);
+            });
+        }, 5000);
+    });
+</script>
+
+{% endblock %}

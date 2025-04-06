@@ -77,11 +77,18 @@ def LoginView(request):
 
     return render(request, 'login_page.html')
 
+
+
 def LogoutView(request):
-
+    # Clear session data
+    request.session.flush()
+    
+    # Logout the user
     logout(request)
-
+    
     return redirect('login')
+
+
 
 def ForgotPassword(request):
 
@@ -178,38 +185,100 @@ def ResetPassword(request, reset_id):
 
 @login_required #restrict user to suthentication only then can view profile page 
 def profile(request):
-    return render(request, "profile.html", {"user": request.user})
+    user = request.user
+    
+    # Check if the user is a coordinator and redirect accordingly
+    if user.is_authenticated:
+        if hasattr(user, 'Club Coordinator'):
+            return redirect('coordinator_dashboard')  # Redirect to the club dashboard
+        elif hasattr(user, 'Department Coordinator'):
+            return redirect('coordinator_dashboard_dept')  # Redirect to the department dashboard
+
+    # Default profile view for non-coordinators
+    return render(request, "profile.html", {"user": user})
 
 
 
+
+
+
+# def home(request):
+#     coordinator_name = request.session.get('coordinator_name', None)  # Retrieve coordinator name from session
+#     return render(request, "index.html", {"message": "Login successful!", "coordinator_name": coordinator_name})
 def home(request):
-    return render(request, "index.html", {"message": "Login successful!"})
+    return render(request, "index.html", {
+        "coordinator_name": request.session.get('coordinator_name', None)
+    })
+
 
 
 
 def coordinator_view(request):
+    # Check if the request is a POST (form submission)
     if request.method == "POST":
-        coordinator_name = request.POST.get("username")  # ✅ Match with HTML form
-        password = request.POST.get("password")  # ✅ Match with HTML form
+        coordinator_name = request.POST.get("username")
+        password = request.POST.get("password")
 
         try:
+            # Fetch coordinator object matching the provided credentials
             coordinator = Coordinator.objects.get(coordinator_name=coordinator_name, password=password)
-            request.session['coordinator_name'] = coordinator.coordinator_name  # Store in session
-            request.session['email'] = coordinator.email  # Store email in session
+            
+            # Store essential coordinator info in session for later use
+            request.session['coordinator_name'] = coordinator.coordinator_name
+            request.session['email'] = coordinator.email
+            request.session['coordinator_type'] = coordinator.coordinator_type
 
-            return redirect('coordinator_dashboard')  # Redirect to dashboard if login is successful
-        
+            # Redirect based on coordinator type
+            if coordinator.coordinator_type == 'department':
+                # If it's a department coordinator, redirect to department dashboard
+                return redirect('coordinator_dashboard')
+            else:
+                # Otherwise, assume it's a club coordinator and redirect to club dashboard
+                return redirect('coordinator_dashboard')
+
         except Coordinator.DoesNotExist:
+            # If no matching coordinator is found, show an error and reload login page
             messages.error(request, "Invalid login credentials")
             return redirect('coordinator_login')
 
+    # Render the login page initially or if the request isn't a POST
     return render(request, 'coordinator_login.html')
 
 
-def coordinator_dash(request):
-    if 'coordinator_name' in request.session:
-        coordinator_name = request.session['coordinator_name']  # ✅ Corrected key
-        email = request.session.get('email', None)  # ✅ Fetch email if exists
-        return render(request, 'coordinator_dashboard.html', {'coordinator_name': coordinator_name, 'email': email })
+# def coordinator_dash(request):
+#     if 'coordinator_name' in request.session:
+#         coordinator_name = request.session['coordinator_name']  # ✅ Corrected key
+#         email = request.session.get('email', None)  # ✅ Fetch email if exists
+#         return render(request, 'coordinator_dashboard.html', {'coordinator_name': coordinator_name, 'email': email })
     
-    return redirect('coordinator_login')  # Redirect to login if session does not exist
+#     return redirect('coordinator_login')  # Redirect to login if session does not exist
+
+
+# def coordinator_dash_dept(request):
+#     if 'coordinator_name' in request.session:
+#         coordinator_name = request.session['coordinator_name']  # ✅ Corrected key
+#         email = request.session.get('email', None)  # ✅ Fetch email if exists
+#         return render(request, 'coordinator_dept_dashboard.html', {'coordinator_name': coordinator_name, 'email': email })
+    
+#     return redirect('coordinator_login')  # Redirect to login if session does not exist
+
+
+
+
+
+
+def coordinator_dashboard(request):
+    if 'coordinator_name' in request.session:
+        coordinator_name = request.session['coordinator_name']
+        email = request.session.get('email', None)
+
+        try:
+            coordinator = Coordinator.objects.get(coordinator_name=coordinator_name)
+            if coordinator.coordinator_type == 'department':
+                return render(request, 'coordinator_dept_dashboard.html', {'coordinator_name': coordinator_name, 'email': email})
+            else:
+                return render(request, 'coordinator_dashboard.html', {'coordinator_name': coordinator_name, 'email': email})
+        except Coordinator.DoesNotExist:
+            return redirect('coordinator_login')  # Redirect if the coordinator doesn't exist
+    
+    return redirect('coordinator_login')  # Redirect if session does not exist

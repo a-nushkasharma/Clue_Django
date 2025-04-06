@@ -1,0 +1,116 @@
+{% extends 'nav.html' %}  <!-- Extending nav_coor.html -->
+ <!-- Coordinator dashboard for club admin -->
+{% load static %}
+
+{% block content %}
+
+
+ <!-- Page Content -->
+ <div class="pt-20">
+    {% if request.session.coordinator_name %}
+        <div class="flex h-screen mt-16">
+            <!-- Sidebar -->
+            <aside class="w-1/4 bg-white h-full p-6 shadow-lg hidden sm:block">
+                <nav class="space-y-4 mt-8">
+                    <a href="{% url 'coordinator_dashboard' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Dashboard</a>
+                    <a href="{% url 'eventspage1' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Events</a>
+                    <a href="{% url 'notices' %}" class="block text-gray-800 font-medium hover:text-blue-600 transition">Notice</a>
+                    <a href="{% url 'logout' %}" class="block text-gray-800 font-medium hover:text-red-600 transition">Logout</a>
+                </nav>
+            </aside>
+            <!-- Main Content -->
+            <main class="flex-1 p-10">
+
+            <!-- Notices Section (Hidden by Default) -->
+            <section id="noticesSection" class="hidden">
+                <h2 class="text-2xl font-bold mb-4">Notices</h2>
+
+                <!-- Create Notice Button -->
+                <button onclick="openNoticePopup()" class="mb-4 bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600">
+                    Create Notice
+                </button>
+
+                <!-- Notices List -->
+                <ul class="space-y-4">
+                    {% for notice in notices %}
+                        <li class="p-4 bg-white shadow rounded">
+                            <strong class="text-lg">{{ notice.title }}</strong>
+                            <p>{{ notice.description }}</p>
+                            <p class="text-gray-600 text-sm">Posted on: {{ notice.date_posted }}</p>
+
+                            <!-- Delete Notice Button -->
+                            <form action="{% url 'delete' notice.id %}" method="POST" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-600 hover:underline mt-2">Delete</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </section>
+
+            <!-- Create Notice Popup Modal -->
+            <div id="noticePopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+                <div class="bg-white p-8 rounded-lg shadow-lg w-1/2">
+                    <h2 class="text-2xl font-bold mb-4">Create Club Notice</h2>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                    
+                        <label class="block mb-2">Title:</label>
+                        <input type="text" name="title" class="border p-2 w-full mb-4" required>
+                    
+                        <label class="block mb-2">Description:</label>
+                        <textarea name="description" class="border p-2 w-full mb-4" required></textarea>
+                    
+                        <!-- Club Selector -->
+                        {% if coordinator.coordinator_type == "department" %}
+                            <label class="block mb-2">Club:</label>
+                            <select name="club_name" class="border p-2 w-full mb-4">
+                                <option value="">None</option>
+                                {% for club in clubs %}
+                                    <option value="{{ club.club_name }}">{{ club.club_name }}</option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
+                    
+                        <!-- Department Selector -->
+                        {% if coordinator.coordinator_type == "department" %}
+                            <label class="block mb-2">Department:</label>
+                            <select name="department_name" class="border p-2 w-full mb-4">
+                                <option value="">None</option>
+                                {% for department in departments %}
+                                    <option value="{{ department.department_name }}">{{ department.department_name }}</option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
+                    
+                        <div class="flex justify-end">
+                            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Create Notice</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Show the notices section
+        function showNoticesSection() {
+            const noticesSection = document.getElementById('noticesSection');
+            noticesSection.classList.remove('hidden');
+            noticesSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Functions to handle the popup modal
+        function openNoticePopup() {
+            document.getElementById('noticePopup').classList.remove('hidden');
+        }
+
+        function closeNoticePopup() {
+            document.getElementById('noticePopup').classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>
+{% endblock %}

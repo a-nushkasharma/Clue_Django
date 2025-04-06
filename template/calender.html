@@ -1,0 +1,105 @@
+ {% load static %} 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Calendar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-blue-900 bg-cover bg-center min-h-screen flex items-center justify-center"
+      style="background-image: url('{% static 'images/background.jpg' %}');">
+
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full">
+        <button onclick="window.location.href='{% url 'home' %}'" class="text-gray-600 hover:text-gray-900 text-2xl float-right">&times;</button>
+        <h1 class="text-3xl font-bold text-center mb-4">Event Calendar</h1>
+
+        <!-- Month Navigation (Moved Closer) -->
+        <div class="flex justify-between items-center mb-4">
+            <a href="?month={{ prev_month }}&year={{ prev_year }}" 
+               class="px-3 py-2 bg-gray-300 rounded shadow hover:bg-gray-400 transition">
+                ◀ Prev
+            </a>
+            <h2 class="text-xl font-bold">{{ month}}   {{ year }}</h2>
+            <a href="?month={{ next_month }}&year={{ next_year }}" 
+               class="px-3 py-2 bg-gray-300 rounded shadow hover:bg-gray-400 transition">
+                Next ▶
+            </a>
+        </div>
+
+        <table class="w-full border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-gray-300 p-2">Sun</th>
+                    <th class="border border-gray-300 p-2">Mon</th>
+                    <th class="border border-gray-300 p-2">Tue</th>
+                    <th class="border border-gray-300 p-2">Wed</th>
+                    <th class="border border-gray-300 p-2">Thu</th>
+                    <th class="border border-gray-300 p-2">Fri</th>
+                    <th class="border border-gray-300 p-2">Sat</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for week in weeks %}
+                    <tr>
+                        {% for day_data in week %}
+                            <td class="border border-gray-300 p-4 text-center 
+                                       {% if day_data.date == today %} bg-blue-200 {% endif %}
+                                       {% if day_data.day == 0 %} bg-gray-100 {% endif %}">
+                                
+                                {% if day_data.day != 0 %}
+                                    <div class="text-lg font-semibold">{{ day_data.day }}</div>
+                                    
+                                    {% for event in day_data.events %}
+                                        <div onclick="openPopup('{{ event.name }}', '{{ event.type }}')" 
+                                             class="cursor-pointer text-sm bg-blue-100 text-blue-600 p-1 mt-1 rounded hover:bg-blue-300 transition">
+                                            {{ event.name }} ({{ event.type }})
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="text-gray-400"></div>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Popup Modal -->
+    <div id="event-popup" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div class="relative bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+            <!-- Close Button -->
+            <button onclick="closePopup()" class="absolute top-3 right-3 text-gray-600 hover:text-gray-800 text-2xl">
+                &times;
+            </button>
+            <!-- Event Details -->
+            <h2 id="popup-title" class="text-xl font-bold text-center mb-2"></h2>
+            <p id="popup-description" class="text-gray-800 text-center"></p>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        function openPopup(eventName, eventType) {
+            document.getElementById('popup-title').innerText = eventName;
+            document.getElementById('popup-description').innerText = "Event Type: " + eventType;
+            document.getElementById('event-popup').classList.remove('hidden');
+        }
+
+        function closePopup() {
+            document.getElementById('event-popup').classList.add('hidden');
+        }
+
+        // Close popup when clicking outside
+        document.getElementById('event-popup').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closePopup();
+            }
+        });
+    </script>
+
+</body>
+</html>
