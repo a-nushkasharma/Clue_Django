@@ -12,7 +12,7 @@ def create_event(request):
     if "coordinator_name" not in request.session:
         return redirect("coordinator_login")  # Redirect to login if not authenticated
 
-    try:
+    try: 
         coordinator = Coordinator.objects.get(coordinator_name=request.session["coordinator_name"])
 
         if coordinator.coordinator_type != "club" or not coordinator.club_name:
