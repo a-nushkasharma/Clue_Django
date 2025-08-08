@@ -164,7 +164,7 @@ def modify_event(request, event_id):
 
 def delete_event(request, event_id):
     if "coordinator_name" not in request.session:
-        return redirect("coordinator_login")  # Redirect to login if not authenticated
+        return redirect("coordinator_login")  # Redirect the user to login if not authenticated
 
     try:
         coordinator = Coordinator.objects.get(coordinator_name=request.session["coordinator_name"])
